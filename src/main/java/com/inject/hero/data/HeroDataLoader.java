@@ -6,9 +6,12 @@ import com.inject.hero.api.hero.repositories.HeroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -22,15 +25,26 @@ public class HeroDataLoader implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        Path file = ResourceUtils.getFile("classpath:data/heroes.json").toPath();
+        /*Path file = ResourceUtils.getFile("classpath:data/heroes.json").toPath();
         String fileContent = new String(Files.readAllBytes(file));
 
         ObjectMapper objectMapper = new ObjectMapper();
         List<HeroEntity> heroes = Arrays.asList(objectMapper.readValue(fileContent, HeroEntity[].class));
-        heroRepository.saveAll(heroes);
-        /*for (HeroDto hero : heroes) {
-            System.out.println(hero.getSuperhero());
-        }*/
+        heroRepository.saveAll(heroes);*/
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        // Cargar el archivo desde el classpath
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("data/heroes.json");
+        System.out.println("inputStream => " + inputStream.toString());
+
+        if (inputStream != null) {
+            List<HeroEntity> heroes = Arrays.asList(objectMapper.readValue(inputStream, HeroEntity[].class));
+            heroRepository.saveAll(heroes);
+        } else {
+            System.err.println("No se pudo cargar el archivo heroes.json");
+        }
+
+
 
         /*List<HeroEntity> Hero = Arrays.asList(
                 HeroEntity
