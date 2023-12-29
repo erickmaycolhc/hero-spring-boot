@@ -1,0 +1,9 @@
+
+
+FROM openjdk:17-jdk-alpine
+#RUN docker build -t pee-java-app:1.0.0 .
+#RUN docker builder prune -a
+
+COPY target/hero-0.0.1-SNAPSHOT.jar hero-0.0.1-SNAPSHOT.jar
+ENTRYPOINT ["java", "-jar", "hero-0.0.1-SNAPSHOT.jar"]
+#RUN docker run -p 8090:8090 pee-java-app:1.0.0
